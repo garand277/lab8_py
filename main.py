@@ -10,13 +10,14 @@ class MemeApp:
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
         page.scroll = ft.ScrollMode.AUTO
+        page.window_width = 600
+        page.window_height = 370
 
         self.image_path = ""
-        self.path_display = ft.TextField(label='Путь к изображению', width=400, disabled=True)
         self.top_text_input = ft.TextField(label='Текст сверху', width=400)
         self.bottom_text_input = ft.TextField(label='Текст снизу', width=400)
         self.font_size_slider = ft.Slider(min=10, max=100, value=30, divisions=90, label="{value}", width=400)
-        self.image_display = ft.Image(src="", width=400, height=400)
+        self.image_display = ft.Image(width=450, height=400)
 
         select_image_button = ft.ElevatedButton(text='Выбрать изображение', on_click=self.on_select_image_click)
         preview_button = ft.ElevatedButton(text='Предварительный просмотр', on_click=self.on_preview_click)
@@ -25,7 +26,7 @@ class MemeApp:
         self.file_picker = ft.FilePicker(on_result=self.on_file_selected)
 
         page.overlay.append(self.file_picker)
-        page.add(select_image_button, self.path_display, self.top_text_input, self.bottom_text_input, self.font_size_slider, preview_button, save_button, self.image_display)
+        page.add(select_image_button, self.top_text_input, self.bottom_text_input, self.font_size_slider, preview_button, save_button, self.image_display)
 
     def on_select_image_click(self, e):
         self.file_picker.pick_files(allow_multiple=False)
@@ -33,11 +34,10 @@ class MemeApp:
     def on_file_selected(self, e: ft.FilePickerResultEvent):
         if e.files:
             self.image_path = e.files[0].path
-            self.path_display.value = self.image_path
-            e.page.update()
 
     def on_preview_click(self, e):
         if self.image_path:
+            e.page.window_height = 800
             top_text = self.top_text_input.value
             bottom_text = self.bottom_text_input.value
             font_size = self.font_size_slider.value
